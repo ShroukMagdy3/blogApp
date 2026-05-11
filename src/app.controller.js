@@ -9,7 +9,7 @@ import postRouter from "./modules/posts/posts.controller.js";
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
-  limit: 5,
+  limit: 50,
   handler: (req, res, options, next) => {
     res.status(400)
       .json({
@@ -26,7 +26,7 @@ const bootstrap = (app, express) => {
   
   }))
   app.use(express.json());
-  // app.use(limiter);
+  app.use(limiter);
   app.use(helmet());
   app.get("/", (req, res, next) => {
     res.status(200).json({ message: "welcome to my app" })

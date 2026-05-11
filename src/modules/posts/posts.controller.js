@@ -6,6 +6,7 @@ import { createPost, deletePost, getAllPosts, getPostById, updatePost } from "./
 
 const postRouter = Router();
  
+
 postRouter.get("/", optionalAuth, getAllPosts);        
 postRouter.get("/:id", optionalAuth, getPostById);    
 postRouter.post("/create", authentication,validation(createPostSchema), createPost);      

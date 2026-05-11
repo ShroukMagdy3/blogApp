@@ -4,7 +4,6 @@ import userModel from "../DB/models/user.model.js";
 export const authentication = async (req, res, next) => {
   const { authorization } = req.headers;
   const [prefix, token] = authorization?.split(" ") || [];
-  
   if (!prefix || !token) {
     return res.status(404).json({ message: "token is required" });
   }
@@ -15,13 +14,11 @@ export const authentication = async (req, res, next) => {
   } else {
     return res.status(400).json({ message: "invalid token" });
   }
-
   const decode = jwt.verify(token, signature);
   const user = await userModel.findById(decode.id);
   if (!user) {
     return res.status(404).json({ message: "user not found" });
   }
-
   req.user = user;
   return next();
 };

@@ -4,8 +4,12 @@ import bootstrap from "./src/app.controller.js";
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 7000 ;
+const port = process.env.PORT || 7000;
 
 bootstrap(app, express);
 
-app.listen(port, () => console.log(` app listening on port ${port}!`));
+if (!process.env.VERCEL) {
+  app.listen(port, () => console.log(`app listening on port ${port}!`));
+}
+
+export default app;
