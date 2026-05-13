@@ -8,8 +8,6 @@ const port = process.env.PORT || 7000;
 
 await bootstrap(app, express);
 
-if (!process.env.VERCEL) {
-  app.listen(port, () => console.log(`app listening on port ${port}!`));
-}
+app.listen(port, () => console.log(`app listening on port ${port}!`));
 
 export default app;
