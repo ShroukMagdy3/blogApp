@@ -20,7 +20,7 @@ const limiter = rateLimit({
 });
 
 
-const bootstrap = (app, express) => {
+const bootstrap = async (app, express) => {
   app.use(cors({
     origin: "*",
   
@@ -31,7 +31,7 @@ const bootstrap = (app, express) => {
   app.get("/", (req, res, next) => {
     res.status(200).json({ message: "welcome to my app" })
   })
-  checkConnection();
+  await checkConnection();
   
   app.use("/api/auth", userRouter)
   app.use("/api/posts", postRouter)
