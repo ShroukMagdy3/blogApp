@@ -1,23 +1,36 @@
 import mongoose from "mongoose";
 
+let connectionPromise = null;
+
 const checkConnection = async () => {
-  if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
-    return;
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
   }
 
-  await mongoose
+  if (connectionPromise) {
+    return connectionPromise;
+  }
+
+  if (!process.env.DB_URL) {
+    throw new Error("DB_URL is missing");
+  }
+
+  connectionPromise = mongoose
     .connect(process.env.DB_URL, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-      bufferCommands: false, // Disable mongoose buffering
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
     })
-    .then(() => {
+    .then((mongooseInstance) => {
       console.log("success connection to DB");
+      return mongooseInstance.connection;
     })
     .catch((error) => {
-      console.log(error);
-
-      console.log("fail to connectDB");
+      connectionPromise = null;
+      console.log("fail to connectDB", error);
+      throw error;
     });
+
+  return connectionPromise;
 };
 export default checkConnection;
