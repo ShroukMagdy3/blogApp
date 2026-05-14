@@ -12,4 +12,5 @@ postRouter.get("/:id", optionalAuth, getPostById);
 postRouter.post("/create", authentication,validation(createPostSchema), createPost);      
 postRouter.post("/update/:id", authentication, validation(updatePostSchema), updatePost);   
 postRouter.delete("/:id", authentication, deletePost);
+
 export default postRouter;

@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import {Hash , compare} from "../../utilities/hash.js";
 import userModel from "../../DB/models/user.model.js";
 import { generateToken } from "../../utilities/token.js";
+import postModel from "../../DB/models/post.model.js";
 
 
 
@@ -50,4 +51,23 @@ export const signIn = async (req, res, next) => {
     options: { expiresIn: "1y", jwtid: nanoid() },
   });
   return res.status(200).json({ message: "Done",user, access_token, refresh_token });
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    const posts = await postModel
+      .find({ user: req.user._id })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: "Profile fetched successfully",
+      user: req.user,
+      posts,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
 };
