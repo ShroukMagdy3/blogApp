@@ -56,7 +56,7 @@ export const signIn = async (req, res, next) => {
 export const getProfile = async (req, res) => {
   try {
     const posts = await postModel
-      .find({ user: req.user._id })
+      .find({ author: req.user._id })
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -65,6 +65,7 @@ export const getProfile = async (req, res) => {
       posts,
     });
   } catch (error) {
+     console.log(error)
     return res.status(500).json({
       message: "Something went wrong",
       error: error.message,
