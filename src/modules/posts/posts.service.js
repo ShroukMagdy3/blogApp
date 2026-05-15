@@ -22,11 +22,11 @@ export const getAllPosts = async (req, res, next) => {
 export const getPostById = async (req, res, next) => {
   try {
     const post = await postModel.findById(req.params.id).populate("author", "name");
-    if (!post) throw new Error("post not found" , {case:404})
+    if (!post) throw new Error("post not found", { case: 404 })
 
     if (!post.isPublic) {
       if (!req.user || post.author._id.toString() !== req.user._id.toString()) {
-        throw new Error ("unauthorized" , {case:403})   
+        throw new Error("unauthorized", { case: 403 })
       }
     }
     res.json(post);
@@ -61,11 +61,13 @@ export const updatePost = async (req, res, next) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
-    const { title, description, imageUrl, isPublic } = req.body;
+    const { title, description, imageUrl ,isPublic } = req.body;
     post.title = title ?? post.title;
     post.description = description ?? post.description;
-    post.imageUrl = imageUrl ?? post.imageUrl;
     post.isPublic = isPublic ?? post.isPublic;
+    if (imageUrl !== undefined) {
+      post.imageUrl = imageUrl;
+    }
 
     await post.save();
     res.json(post);
@@ -75,16 +77,16 @@ export const updatePost = async (req, res, next) => {
 };
 
 export const deletePost = async (req, res, next) => {
-    const { id } = req.params;
-    if(!id) {
-        throw new Error("id is required" , {case:400})
-    }
+  const { id } = req.params;
+  if (!id) {
+    throw new Error("id is required", { case: 400 })
+  }
   try {
     const post = await postModel.findById(id);
-    if (!post) throw new Error("post not found" , {case:404})
+    if (!post) throw new Error("post not found", { case: 404 })
 
     if (post.author.toString() !== req.user._id.toString()) {
-      throw new Error ("unauthorized" , {case:403})
+      throw new Error("unauthorized", { case: 403 })
     }
 
     await post.deleteOne();

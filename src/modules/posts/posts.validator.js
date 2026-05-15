@@ -13,7 +13,7 @@ export const updatePostSchema = {
   body: Joi.object({
     title: Joi.string().min(3),
     description: Joi.string().min(10),
-    imageUrl: Joi.string().uri(),
+     imageUrl: Joi.string().uri().allow("", null),
     isPublic: Joi.boolean(),
   }),
 };
